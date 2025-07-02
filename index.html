@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rifa Benéfica - Apoyo Médico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .prize-amount {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #28a745;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .cost-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .participants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .participant {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .participant:hover {
+            background: #e9ecef;
+            transform: scale(1.02);
+        }
+
+        .participant-number {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 0.9rem;
+        }
+
+        .participant-name {
+            margin-top: 5px;
+            font-size: 1rem;
+        }
+
+        .sold {
+            background: #d4edda !important;
+            border-left-color: #28a745 !important;
+        }
+
+        .sold::after {
+            content: "✓ VENDIDO";
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #28a745;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .rules {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .rules h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .rules ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rules li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .rules li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: width 0.3s ease;
+        }
+
+        .contact-info {
+            background: #667eea;
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .heart {
+            color: #ff6b6b;
+            font-size: 1.2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .participants-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .prize-amount {
+                font-size: 2rem;
+            }
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎲 Rifa Benéfica 🎲</h1>
+            <p class="subtitle">Apoyo médico para la abuela <span class="heart">❤️</span></p>
+            <p>Juntos podemos hacer la diferencia</p>
+        </div>
+
+        <div class="info-cards">
+            <div class="card">
+                <h2>🎁 Premio</h2>
+                <div class="prize-amount">$5,000 MXN</div>
+                <p>El ganador se llevará cinco mil pesos mexicanos en efectivo.</p>
+            </div>
+
+            <div class="card">
+                <h2>💰 Costo por Boleto</h2>
+                <div class="cost-amount">$120 MXN</div>
+                <p>Cada participación cuesta ciento veinte pesos mexicanos.</p>
+            </div>
+
+            <div class="card">
+                <h2>📊 Progreso de Ventas</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 45%;" id="progress">
+                        18 de 40 vendidos
+                    </div>
+                </div>
+                <p><strong>Faltan 22 boletos para completar la rifa!</strong></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>👥 Participantes Registrados</h2>
+            <p>Los siguientes números ya han sido adquiridos:</p>
+            <div class="participants-grid">
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #01</div>
+                    <div class="participant-name">María González</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #02</div>
+                    <div class="participant-name">Carlos Rodríguez</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #03</div>
+                    <div class="participant-name">Ana Martínez</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #04</div>
+                    <div class="participant-name">José López</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #05</div>
+                    <div class="participant-name">Carmen Hernández</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #06</div>
+                    <div class="participant-name">Roberto Silva</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #07</div>
+                    <div class="participant-name">Patricia Morales</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #08</div>
+                    <div class="participant-name">Miguel Jiménez</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #09</div>
+                    <div class="participant-name">Lucía Ramírez</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #10</div>
+                    <div class="participant-name">Fernando Castro</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #11</div>
+                    <div class="participant-name">Sandra Vargas</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #12</div>
+                    <div class="participant-name">Daniel Ruiz</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #13</div>
+                    <div class="participant-name">Isabel Torres</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #14</div>
+                    <div class="participant-name">Ricardo Mendoza</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #15</div>
+                    <div class="participant-name">Teresa Aguilar</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #16</div>
+                    <div class="participant-name">Alejandro Peña</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #17</div>
+                    <div class="participant-name">Monica Flores</div>
+                </div>
+                <div class="participant sold">
+                    <div class="participant-number">Boleto #18</div>
+                    <div class="participant-name">Héctor Delgado</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #19</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #20</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #21</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #22</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #23</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #24</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #25</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #26</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #27</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #28</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #29</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #30</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #31</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #32</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #33</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #34</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #35</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #36</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #37</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #38</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #39</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-number">Boleto #40</div>
+                    <div class="participant-name">Disponible</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules">
+            <h2>📋 Reglas y Condiciones</h2>
+            <ul>
+                <li>Cada boleto cuesta $120 pesos mexicanos</li>
+                <li>El premio es de $5,000 pesos mexicanos en efectivo</li>
+                <li>La rifa iniciará cuando se vendan todos los 40 boletos</li>
+                <li>El número ganador se determinará con la Lotería Nacional</li>
+                <li>El sorteo será transparente y público</li>
+                <li>Los fondos recaudados son para apoyo médico</li>
+                <li>El ganador será contactado inmediatamente</li>
+                <li>No hay reembolsos una vez iniciado el sorteo</li>
+                <li>Todos los participantes deben ser mayores de edad</li>
+                <li>La entrega del premio será en efectivo</li>
+            </ul>
+        </div>
+
+        <div class="contact-info">
+            <h2>📞 Información de Contacto</h2>
+            <p><strong>Para participar o más información:</strong></p>
+            <p>📱 WhatsApp: [Tu número aquí]</p>
+            <p>📧 Email: [Tu email aquí]</p>
+            <p>📍 Ubicación: [Tu ciudad, México]</p>
+            <br>
+            <p><span class="heart">❤️</span> <strong>¡Gracias por tu apoyo solidario!</strong> <span class="heart">❤️</span></p>
+            <p>Cada peso cuenta para ayudar en este momento difícil</p>
+        </div>
+    </div>
+
+    <script>
+        // Función para actualizar la barra de progreso
+        function updateProgress() {
+            const soldTickets = document.querySelectorAll('.participant.sold').length;
+            const totalTickets = document.querySelectorAll('.participant').length;
+            const percentage = (soldTickets / totalTickets) * 100;
+            
+            const progressBar = document.getElementById('progress');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = `${soldTickets} de ${totalTickets} vendidos`;
+        }
+
+        // Función para marcar un boleto como vendido
+        function sellTicket(ticketNumber, buyerName) {
+            const participants = document.querySelectorAll('.participant');
+            const ticket = participants[ticketNumber - 1];
+            if (ticket && !ticket.classList.contains('sold')) {
+                ticket.classList.add('sold');
+                ticket.querySelector('.participant-name').textContent = buyerName;
+                updateProgress();
+                
+                // Efecto visual de venta
+                ticket.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    ticket.style.transform = 'scale(1)';
+                }, 300);
+            }
+        }
+
+        // Función para agregar interactividad a los boletos disponibles
+        document.addEventListener('DOMContentLoaded', function() {
+            const availableTickets = document.querySelectorAll('.participant:not(.sold)');
+            
+            availableTickets.forEach(ticket => {
+                ticket.addEventListener('click', function() {
+                    const ticketNumber = this.querySelector('.participant-number').textContent.match(/\d+/)[0];
+                    alert(`¡Interesado en el boleto #${ticketNumber}!\nContáctanos para apartar tu lugar.`);
+                });
+                
+                // Agregar cursor pointer para indicar que es clickeable
+                ticket.style.cursor = 'pointer';
+            });
+            
+            // Inicializar barra de progreso
+            updateProgress();
+        });
+
+        // Función para simular ventas (puedes llamarla desde la consola para pruebas)
+        function simulateSale(ticketNum, name) {
+            sellTicket(ticketNum, name);
+        }
+    </script>
+</body>
+</html>
